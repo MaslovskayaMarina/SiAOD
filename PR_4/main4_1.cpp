@@ -22,7 +22,7 @@ public:
                 if (ct > 0) count++;
                 return T; // Вернуть текущий узел
             }
-            if (T->left->key > key) { 
+            if (T->left->key > key) {
                 if (ct > 0) count++;// Ключ может лежать в левом-левом поддереве 
                 T->left->left = splay(T->left->left, key, ct); // Рекурсивно поднимем ключ
                 T = rightRotate(T); // Выполним правый поворот
@@ -38,7 +38,7 @@ public:
             return (T->left == NULL) ? T : rightRotate(T); // Выполним правый разворот для корня
         }
         else {// Ключ может находиться в правом поддереве
-            if (T->right == NULL) { 
+            if (T->right == NULL) {
                 if (ct > 0) count++;// Если искомого ключа нет в дереве
                 return T; // Возвращаем текущий узел
             }
@@ -50,7 +50,7 @@ public:
                     T->right = rightRotate(T->right); // Выполним правый поворот
                 }
             }
-            else if (T->right->key < key) { 
+            else if (T->right->key < key) {
                 if (ct > 0) count++;// Ключ может находиться в правом-левом поддереве
                 T->right->right = splay(T->right->right, key, ct); // Рекурсивно поднимем ключ
                 T = leftRotate(T); // Выполним левый поворот
@@ -98,13 +98,13 @@ public:
                 if (y < 24) if (BIGDATA[y + 1] != ' ') {
                     h = 10;
                 }
-                    this_key = h*(this_key + (int)BIGDATA[y] - '0');
-                    h = 1;
+                this_key = h * (this_key + (int)BIGDATA[y] - '0');
+                h = 1;
             }
             ffout.close(); // Закрываем файл
         }
         if (!T) {
-            cout << "Был вставлен ключ " << this_key << endl; // Выводим данные созданного узла
+            cout << "Был вставлен ключ " << this_key << " Data: " << data << endl; // Выводим данные созданного узла
             ALLkeyS = ALLkeyS + ' ' + to_string(this_key); // Записываем в строку со всеми ключами наш текущий ключ
             // В будущем ALLkeyS понадобится для синхронизации файла
             return createNode(this_key, data); // Если узел пустой, вызываем метод создания узла
@@ -117,14 +117,14 @@ public:
                 node->right = T; // В правое поддерево node сохраняем T
                 node->left = T->left; // В левое поддерево node сохраняем левое поддерево T
                 T->left = nullptr; // Левое поддерево T делаем пустым
-                cout << "Был вставлен ключ " << this_key << endl; // Выводим данные созданного узла
+                cout << "Был вставлен ключ " << this_key << " Data: " << data << endl; // Выводим данные созданного узла
                 ALLkeyS = ALLkeyS + ' ' + to_string(this_key); // Записываем ключ в массив ключей
             }
             else { // Текущий ключ больше ключа найденного узла
                 node->left = T; // В левое поддерево node записываем T
                 node->right = T->right; // В правое поддерево node записываем правое поддерево T
                 T->right = nullptr; // Правое поддерево T делаем пустым
-                cout << "Был вставлен ключ " << this_key << endl; // Выводим данные созданного узла
+                cout << "Был вставлен ключ " << this_key << " Data: " << data << endl; // Выводим данные созданного узла
                 ALLkeyS = ALLkeyS + ' ' + to_string(this_key); // Записываем ключ в массив ключей
             }
             return node; // Возвращаем узел node
@@ -159,7 +159,7 @@ public:
         if (!T) return T; // Возврат T, если T nullptr
         if (key < T->key) T->left = deleteNode(key, T->left); //Вызов рекурсии от левого потомка
         else if (key > T->key) T->right = deleteNode(key, T->right); //Вызов рекурсии от правого потомка
-        else if (T->left and T->right) { // Оба потомка не пустые
+        else if (T->left && T->right) { // Оба потомка не пустые
             ifstream ffout("BinFile.bin", ios::binary | ios::out); // Открываем файле
             char BIGDATA[25];
             int x = 0;                                             // Чтобы получить данные,
@@ -207,9 +207,9 @@ public:
         for (int i = 1; i < keyS.length(); i++) { // Считываем из ранее созданной
             key = 0;                              // строки со всеми ключами каждый ключ
             int d = 10;
-            while (keyS[i] != ' ' and i < keyS.length()) {
+            while (keyS[i] != ' ' && i < keyS.length()) {
                 if (i < keyS.length() - 1)
-                    if (keyS[i - 1] == ' ' and keyS[i + 1] == ' ')
+                    if (keyS[i - 1] == ' ' && keyS[i + 1] == ' ')
                         d = 1;
                 key = d * (key + keyS[i] - '0');
                 i++;
@@ -238,22 +238,30 @@ public:
         fin.close(); // Закрываем файл
     }
 
+    string randomArticle(int q) {
+        string result, g;
+        int rDigit;
+        for (int i = 0; i < q; i++) {
+            if (i == 0) {
+                rDigit = 1 + rand() % 9;
+            }
+            else {
+                rDigit = 0 + rand() % 9;
+            }
+
+            g = to_string(rDigit);
+            result += g;
+        }
+
+        return result;
+    }
+
     void createfile() { // Создание обычного текстового файла
-        ofstream fout("TestFile.txt"); // Открываем файл для записи
-        fout << "2 2+4 6" << endl; // Записываем данные...
-        fout << "1 1+0 1" << endl;
-        fout << "10 5+5 10" << endl;
-        fout << "27 6+6 12" << endl;
-        fout << "11 8*8 64" << endl;
-        fout << "9 4+4 8" << endl;
-        fout << "9 5*5 25" << endl;
-        fout << "23 2*3 6" << endl;
-        fout << "66 1*1 1" << endl;
-        fout << "77 5+4 9" << endl;
-        fout << "2 5+6 11" << endl;
-        for (int j = 12; j <= 500; j++)
-            fout << "6 5+6 11" << endl;
-            fout << "999 5+6 11" << endl;
+        ofstream fout("TestFile.txt");
+
+        for (int j = 1; j <= 10000; j++) {
+            fout << randomArticle(6) + " 5+6 11" << endl;
+        }
         fout.close(); // Закрываем текстовый файл
         ifstream fin("TestFile.txt"); // Открываем только что созданный файл для чтения
         ofstream ffout; // Объявляем новый файл для записи
@@ -272,6 +280,8 @@ public:
 int main()
 {
     setlocale(LC_ALL, "Russian");
+    srand(time(0));
+
     B_search B;
     B_search* root = NULL;
     B_search* node;
@@ -324,5 +334,5 @@ int main()
     cout << "\n-----ВЫВОД СДП НА ЭКРАН-----\n";
     //B.printTree(root, 0);
     //f.updatefile(root, B.ALLkeyS);
-    
+
 }
